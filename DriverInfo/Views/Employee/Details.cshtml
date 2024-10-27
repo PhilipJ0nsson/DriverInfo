@@ -1,0 +1,34 @@
+﻿@model DriverInfo.Models.Employee
+
+<h1>Employee Details</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>@Model.Name</h2>
+    </div>
+    <div class="card-body">
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Password:</strong> @Model.Password</p>
+        <p><strong>Role:</strong> @Model.Role</p>
+
+        <!-- Lista över förare som denna anställda är ansvarig för -->
+        <h3>Responsible for drivers:</h3>
+        @if (Model.Drivers != null && Model.Drivers.Any())
+        {
+            <ul>
+                @foreach (var driver in Model.Drivers)
+                {
+                    <li>
+                        <strong>@driver.DriverName</strong> (Reg: @driver.CarReg)
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>This employee is not responsible for any drivers.</p>
+        }
+
+        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    </div>
+</div>

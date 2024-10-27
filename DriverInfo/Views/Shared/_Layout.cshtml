@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DriverInfo</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DriverInfo.styles.css" asp-append-version="true" />
+
+</head>
+<body>
+    <header>
+        <!-- Visa navbaren endast om användaren är inloggad -->
+        @if (Context.Session.GetString("UserEmail") != null)
+        {
+            <nav class="navbar navbar-expand-sm navbar-light border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav mx-auto">
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Event" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="Event" asp-action="Index">Home</a>
+                            </li>
+                            <!-- Visa "Employee" länken endast för admins -->
+                            @if (Context.Session.GetString("UserRole") == "Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Employee" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="Employee" asp-action="Index">Employee</a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Driver" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="Driver" asp-action="Index">Driver</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        }
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @if (Context.Session.GetString("UserEmail") != null)
+    {
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2024 - DriverInfo
+            </div>
+        </footer>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+    <style>
+        body {
+            background-color: #adb5bd; /* Ljusgrå bakgrund */
+        }
+
+        .navbar {
+            background-color: #6c757d; /* Mörkgrå färg för navbar */
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link {
+            color: white; /* Textfärg för länkar */
+            font-size: 1.25rem; /* Större textstorlek */
+            padding: 10px 15px; /* Lägga till lite padding för länkar */
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #ffc107; /* Textfärg vid hover */
+                background-color: rgba(255, 255, 255, 0.2); /* Lätt vit bakgrund vid hover */
+                border-radius: 5px; /* Rundade hörn */
+            }
+
+            .navbar-nav .nav-link.active {
+                color: #ffc107; /* Textfärg för den aktiva länken */
+                background-color: rgba(255, 255, 255, 0.2); /* Lätt vit bakgrund */
+                border-radius: 5px; /* Rundade hörn */
+            }
+
+        .footer {
+            background-color: #343a40; /* Mörkgrå färg för footer */
+            color: white; /* Vit textfärg för footer */
+            padding: 10px 0; /* Padding för footern */
+        }
+
+            /* Specifik stil för hover-effekt på footerlänkar */
+            .footer a {
+                color: white; /* Vit textfärg för footer-länkar */
+                text-decoration: none; /* Ingen understrykning */
+            }
+
+                .footer a:hover {
+                    color: #ffc107; /* Färg vid hover */
+                }
+    </style>
+</body>
+</html>
+
+

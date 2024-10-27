@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Employee>
+
+<!-- Box for displaying employees -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>Employee Information</h2>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in Model)
+                {
+                    <tr>
+                        <td>@employee.Name</td>
+                        <td>@employee.Email</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@employee.EmployeeID" class="btn btn-warning btn-sm me-1">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@employee.EmployeeID" class="btn btn-danger btn-sm me-1" data-delete="true">Delete</a>
+                            <a asp-action="Details" asp-route-id="@employee.EmployeeID" class="btn btn-info btn-sm">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <a asp-action="Create" class="btn btn-primary">Add New Employee</a>
+    </div>
+</div>
+
+<!-- Bootstrap modal for delete confirmation (Bootstrap 5) -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" id="closeModalButton"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this employee?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelButton">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS for Bootstrap 5 -->
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- JavaScript code for handling modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let deleteUrl = '';
+
+        // Select the modal and buttons
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        const closeModalButton = document.getElementById('closeModalButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const confirmDeleteButton = document.getElementById('confirmDelete');
+
+        // When a delete link is clicked, show the modal and set deleteUrl
+        document.querySelectorAll('a[data-delete]').forEach(function (deleteLink) {
+            deleteLink.addEventListener('click', function (event) {
+                event.preventDefault();
+                deleteUrl = deleteLink.getAttribute('href');
+                deleteModal.show();
+            });
+        });
+
+        // Close the modal when Cancel or Close is clicked
+        closeModalButton.addEventListener('click', function () {
+            deleteModal.hide();
+        });
+
+        cancelButton.addEventListener('click', function () {
+            deleteModal.hide();
+        });
+
+        // If the user confirms deletion, navigate to the delete URL
+        confirmDeleteButton.addEventListener('click', function () {
+            window.location.href = deleteUrl;
+        });
+    });
+</script>

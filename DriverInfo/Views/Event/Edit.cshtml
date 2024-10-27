@@ -1,0 +1,41 @@
+﻿@model DriverInfo.Models.Event
+
+<h2>Redigera händelse för @ViewBag.DriverName</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="EventID" />
+    <input type="hidden" asp-for="DriverID" />
+
+    <div class="form-group">
+        <label asp-for="EventDate" class="control-label"></label>
+        <input asp-for="EventDate" class="form-control" type="datetime-local"
+               value="@Model.EventDate.ToString("yyyy-MM-ddTHH:mm")" />
+    </div>
+
+    <div class="form-group">
+        <label for="Description" class="control-label">Händelse</label>
+        <select asp-for="Description" class="form-control">
+            <option value="">-- Välj händelse --</option>
+            <option value="Leverans">Leverans</option>
+            <option value="Tanka">Tanka</option>
+            <option value="Service">Service</option>
+            <option value="Besiktning">Besiktning</option>
+            <option value="Kollision">Kollision</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AmountOut" class="control-label"></label>
+        <input asp-for="AmountOut" class="form-control" type="number" step="0.01" value="@Model.AmountOut" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AmountIn" class="control-label"></label>
+        <input asp-for="AmountIn" class="form-control" type="number" step="0.01" value="@Model.AmountIn" />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Spara ändringar</button>
+        <a asp-action="Index" asp-route-id="@Model.DriverID" class="btn btn-secondary">Avbryt</a>
+    </div>
+</form>

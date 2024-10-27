@@ -1,0 +1,88 @@
+﻿@model Driver
+
+<h1>Driver Details for @Model.DriverName</h1>
+
+<!-- Display driver details -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>Driver Information</h2>
+    </div>
+    <div class="card-body">
+        <p><strong>Driver Name:</strong> @Model.DriverName</p>
+        <p><strong>Car Registration:</strong> @Model.CarReg</p>
+        <p><strong>Responsible Employee:</strong> @Model.ResponsibleEmployee?.Name</p>
+        <p><strong>Total Amount In:</strong> <span class="text-success">@Model.TotalAmountIn.ToString("C")</span></p>
+        <p><strong>Total Amount Out:</strong> <span class="text-danger">@Model.TotalAmountOut.ToString("C")</span></p>
+        <p><strong>Balance:</strong> <span class="@(ViewBag.Balance >= 0 ? "text-success" : "text-danger")">@ViewBag.Balance.ToString("C")</span></p>
+    </div>
+</div>
+
+<!-- Display event list -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>Event List</h2>
+    </div>
+    <div class="card-body">
+        @if (Model.Events != null && Model.Events.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Amount In</th>
+                        <th>Amount Out</th>
+                        <th>Event Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* Use a counter to alternate row colors *@
+                    @{
+                        int rowIndex = 0; // Counter for row colors
+                    }
+
+                    @foreach (var eventItem in Model.Events)
+                    {
+                        // Alternating row colors: white and light gray
+                        var rowClass = (rowIndex % 2 == 0) ? "table-white" : "table-light-gray";
+                        rowIndex++; // Increment counter
+
+                        <tr class="@rowClass">
+                            <td>@eventItem.Description</td>
+                            <td class="text-success">@eventItem.AmountIn.ToString("C")</td> <!-- Green for Amount In -->
+                            <td class="text-danger">@eventItem.AmountOut.ToString("C")</td> <!-- Red for Amount Out -->
+                            <td>@eventItem.EventDate.ToString("g")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No events recorded for this driver yet.</p>
+        }
+
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </div>
+</div>
+
+<style>
+    .table-white {
+        background-color: #ffffff; /* White background */
+    }
+
+    .table-light-gray {
+        background-color: #f8f9fa; /* Light gray background */
+    }
+
+    .text-success {
+        color: #28a745; /* Green text for Amount In */
+    }
+
+    .text-danger {
+        color: #dc3545; /* Red text for Amount Out */
+    }
+
+    .form-control {
+        width: 200px; /* Adjust width as needed */
+    }
+</style>
