@@ -56,5 +56,39 @@ namespace DriverInfo
 
             app.Run();
         }
+        public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
+        {
+            // Övrig konfiguration för appen
+            // ...
+
+            // Skapa en administratörsanvändare i Azure SQL-databasen om den inte finns
+            CreateAdminUser(serviceProvider);
+        }
+
+        private void CreateAdminUser(IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                // Säkerställ att databasen är migrerad till senaste versionen
+                context.Database.Migrate();
+
+                // Kontrollera om det finns en administratör redan
+                if (!context.Employees.Any(e => e.Role == "Admin"))
+                {
+                    var adminUser = new Employee
+                    {
+                        Name = "Admin",
+                        Email = "admin@example.com",
+                        Password = "Admin@123", // OBS: Hasha lösenordet i produktion
+                        Role = "Admin"
+                    };
+
+                    context.Employees.Add(adminUser);
+                    context.SaveChanges();
+                }
+            }
+        }
     }
 }
